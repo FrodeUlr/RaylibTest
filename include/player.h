@@ -26,4 +26,6 @@ bool is_blocked(char tile);
 bool collides_with_level(float x, float y, float radius, Level level,
                          int screenWidth, int screenHeight);
 void render_player(Player player);
+bool check_level_completion(Player player, Level level, int screenWidth,
+                            int screenHeight);
 #endif

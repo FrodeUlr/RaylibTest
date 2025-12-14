@@ -164,3 +164,19 @@ void render_player(Player player) {
            WHITE);
   DrawCircleV(player.position, player.radius, player.color);
 }
+
+bool check_level_completion(Player player, Level level, int screenWidth,
+                            int screenHeight) {
+  int tile_rows = level.height;
+  int tile_cols = level.width;
+  int tile_w = screenWidth / tile_cols;
+  int tile_h = screenHeight / tile_rows;
+
+  int player_tile_x = (int)(player.position.x / tile_w);
+  int player_tile_y = (int)(player.position.y / tile_h);
+
+  if (level.data[player_tile_y][player_tile_x] == 'O') {
+    return true;
+  }
+  return false;
+}

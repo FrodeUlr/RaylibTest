@@ -10,7 +10,7 @@ Level get_level(int number) {
   case 1: {
     static const char *data[] = {
         "####################", "#..............@...#", "#..####............#",
-        "#..#..#............#", "#..#..#....####....#", "#..####....#..#....#",
+        "#..#..#............#", "#..#..#..O.####....#", "#..####....#..#....#",
         "#..........#..#....#", "#..........####....#", "#..................#",
         "####################",
     };
@@ -22,7 +22,7 @@ Level get_level(int number) {
     static const char *data[] = {
         "#######################", "#...#.................#",
         "#...#..........###....#", "#...####@@.........####",
-        "#........@.....#...####", "#........@.....#...####",
+        "#........@.O...#...####", "#........@.....#...####",
         "#..###......@.....#...#", "#.................#...#",
         "#..###................#", "#######################",
     };
@@ -31,7 +31,9 @@ Level get_level(int number) {
     break;
   }
   }
+  level.level = number;
   level.data = level_data;
+  level.completed = false;
   level.width = level_data ? strlen(level_data[0]) : 0;
   level.height = height;
   return level;
@@ -40,6 +42,7 @@ Level get_level(int number) {
 void render_level(Level level, int screen_width, int screen_height) {
   int tile_width = screen_width / level.width;
   int tile_height = screen_height / level.height;
+  TILE_TYPE tile_type;
   for (int y = 0; y < level.height; y++) {
     for (int x = 0; x < level.width; x++) {
       char tile = level.data[y][x];
@@ -47,19 +50,34 @@ void render_level(Level level, int screen_width, int screen_height) {
       switch (tile) {
       case '#':
         color = DARKGRAY;
+        tile_type = WALL;
         break;
       case '.':
         color = LIGHTGRAY;
+        tile_type = GROUND;
         break;
       case '@':
         color = BLUE;
+        tile_type = WATER;
+        break;
+      case 'O':
+        color = RED;
+        tile_type = TARGET;
         break;
       default:
         color = BLACK;
+        tile_type = WALL;
         break;
       }
-      DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height,
-                    color);
+      if (tile_type == TARGET) {
+        DrawCircle(
+            x * tile_width + tile_width / 2, y * tile_height + tile_height / 2,
+            (float)(tile_width < tile_height ? tile_width : tile_height) / 4,
+            color);
+      } else {
+        DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height,
+                      color);
+      }
     }
   }
 }

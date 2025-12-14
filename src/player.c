@@ -4,6 +4,7 @@
 
 Player generate_player(char *name, float x, float y, Color color) {
   Player player;
+  player.name = name;
   player.position = (Vector2){x, y};
   player.speed = 10.0f;
   player.acceleration = 0.0f;
@@ -154,4 +155,12 @@ bool collides_with_level(float x, float y, float radius, Level level,
     }
   }
   return false;
+}
+
+void render_player(Player player) {
+  float name_size = MeasureText(player.name, 20);
+  float middle_x = player.position.x - name_size / 2;
+  DrawText(player.name, middle_x, player.position.y - player.radius - 25, 20,
+           WHITE);
+  DrawCircleV(player.position, player.radius, player.color);
 }

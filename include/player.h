@@ -25,4 +25,5 @@ void two_player_collision(Player *player1, Player *player2, Level level,
 bool is_blocked(char tile);
 bool collides_with_level(float x, float y, float radius, Level level,
                          int screenWidth, int screenHeight);
+void render_player(Player player);
 #endif

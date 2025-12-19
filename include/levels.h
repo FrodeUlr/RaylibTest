@@ -1,6 +1,7 @@
 #ifndef LEVELS_H
 #define LEVELS_H
 #include "raylib.h"
+#include "textures.h"
 #include <stdbool.h>
 
 typedef struct Level {
@@ -9,7 +10,8 @@ typedef struct Level {
   int height;
   const char **data;
   bool completed;
-  Texture2D wall_texture;
+  TextureDef wall_texture;
+  TextureDef ground_texture;
 } Level;
 
 typedef enum { WALL, TARGET, WATER, GROUND } TILE_TYPE;

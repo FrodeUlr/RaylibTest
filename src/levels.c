@@ -1,6 +1,5 @@
 #include "../include/levels.h"
 #include "../include/raylib.h"
-#include <stdio.h>
 #include <string.h>
 
 Level get_level(int number) {
@@ -16,7 +15,11 @@ Level get_level(int number) {
         "####################",
     };
     height = sizeof(data) / sizeof(data[0]);
-    level_data = data;
+    level.data = data;
+    level.wall_texture = SetTextureDef("Stone_Tile", 0, 48, 0, 48,
+                                       "../sprites/Tiles/FarmLand_Tile.png");
+    level.ground_texture = SetTextureDef("Ground_Tile", 0, 48, 0, 48,
+                                         "../sprites/Tiles/Grass_Middle.png");
     break;
   }
   case 2: {
@@ -28,19 +31,31 @@ Level get_level(int number) {
         "#..###................#", "#######################",
     };
     height = sizeof(data) / sizeof(data[0]);
-    level_data = data;
+    level.data = data;
+    level.wall_texture = SetTextureDef("Stone_Tile", 0, 48, 0, 48,
+                                       "../sprites/Tiles/Cliff_Tile.png");
+    level.ground_texture = SetTextureDef("Ground_Tile", 0, 48, 0, 48,
+                                         "../sprites/Tiles/Grass_Middle.png");
     break;
   }
   }
   level.level = number;
-  level.data = level_data;
   level.completed = false;
-  level.width = level_data ? strlen(level_data[0]) : 0;
+  level.width = level.data ? strlen(level.data[0]) : 0;
   level.height = height;
-  level.wall_texture = LoadTexture("../sprites/Tiles/FarmLand_Tile.png");
-  printf("Loaded wall texture with dimensions: %d x %d\n",
-         level.wall_texture.width, level.wall_texture.height);
   return level;
+}
+
+void DrawTextureForGame(TextureDef tdef, int tile_width, int tile_height,
+                        int x_dest, int y_dest) {
+  float scale_factor_x = (float)tile_width / tdef.end_x;
+  float scale_factor_y = (float)tile_height / tdef.end_y;
+  Rectangle source = {tdef.start_x, tdef.start_y, tdef.end_x, tdef.end_y};
+  Rectangle dest = {x_dest * tile_width, y_dest * tile_height,
+                    tdef.end_x * scale_factor_x, tdef.end_y * scale_factor_y};
+  Vector2 origin = {0, 0}; // Top-left corner
+  float rotation = 0.0f;
+  DrawTexturePro(tdef.texture, source, dest, origin, rotation, WHITE);
 }
 
 void render_level(Level level, int screen_width, int screen_height) {
@@ -79,17 +94,9 @@ void render_level(Level level, int screen_width, int screen_height) {
             (float)(tile_width < tile_height ? tile_width : tile_height) / 4,
             color);
       } else if (tile_type == WALL) {
-        float scale_factor_x = (float)tile_width / level.wall_texture.width;
-        float scale_factor_y = (float)tile_height / level.wall_texture.height;
-        Rectangle source = {0, 0, level.wall_texture.width,
-                            level.wall_texture.height};
-        Rectangle dest = {x * tile_width, y * tile_height,
-                          level.wall_texture.width * scale_factor_x,
-                          level.wall_texture.height * scale_factor_y};
-        Vector2 origin = {0, 0}; // Top-left corner
-        float rotation = 0.0f;
-        DrawTexturePro(level.wall_texture, source, dest, origin, rotation,
-                       WHITE);
+        DrawTextureForGame(level.wall_texture, tile_width, tile_height, x, y);
+      } else if (tile_type == GROUND) {
+        DrawTextureForGame(level.ground_texture, tile_width, tile_height, x, y);
       } else {
         DrawRectangle(x * tile_width, y * tile_height, tile_width, tile_height,
                       color);

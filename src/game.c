@@ -127,6 +127,6 @@ void start_game(Config *config) {
     }
     EndDrawing();
   }
-  UnloadTexture(level.wall_texture);
+  UnloadTexture(level.wall_texture.texture);
   CloseWindow();
 }

@@ -80,10 +80,9 @@ void start_game(Game *game, Config *config) {
         }
       }
       ClearBackground(BLACK);
-      render_level(level, screen_width, screen_height);
+      render_level(level);
       update_position(players, player_count, level);
-      two_player_collision(&player_one, &player_two, level, screen_width,
-                           screen_height);
+      two_player_collision(&player_one, &player_two, level);
 
       render_players(players, player_count, level);
       draw_ui(players, player_count, screen_width, screen_height);

@@ -18,11 +18,12 @@ typedef struct Level {
   TextureDef ground_texture;
   TextureDef target_texture;
   TextureDef house_texture;
+  TextureDef water_texture;
 } Level;
 
 typedef enum { WALL, TARGET, WATER, GROUND, HOUSE, PLAYER } TILE_TYPE;
 
-void render_level(Level *level, int screen_width, int screen_height);
+void render_level(Level *level);
 void set_offset(Level *level);
 void set_level(Level *level, int number);
 

@@ -128,19 +128,7 @@ void update_position(Player *players[], int player_count, Level *level) {
   }
 }
 
-void check_collision(Player *player, int screenWidth, int screenHeight) {
-  if (player->position.x < player->radius)
-    player->position.x = player->radius;
-  if (player->position.x > screenWidth - player->radius)
-    player->position.x = screenWidth - player->radius;
-  if (player->position.y < player->radius)
-    player->position.y = player->radius;
-  if (player->position.y > screenHeight - player->radius)
-    player->position.y = screenHeight - player->radius;
-}
-
-void two_player_collision(Player *p1, Player *p2, Level *level, int screenWidth,
-                          int screenHeight) {
+void two_player_collision(Player *p1, Player *p2, Level *level) {
   float dx = p1->position.x - p2->position.x;
   float dy = p1->position.y - p2->position.y;
 

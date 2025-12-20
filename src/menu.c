@@ -80,6 +80,9 @@ void draw_main_menu(Menu *menu, Game *game) {
     else if (!menu->editingPlayer1 && menu->player2NameLen > 0)
       menu->player2Name[--menu->player2NameLen] = '\0';
   }
+  if (IsKeyPressed(KEY_ESCAPE)) {
+    game->game_state = EXIT;
+  }
 }
 
 void check_inputs(Menu *menu, Game *game, Level *level) {

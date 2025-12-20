@@ -22,22 +22,24 @@ void set_level(Level *level, int number) {
   level->house_texture =
       SetTextureDef("House_Tile", 0, 96, 0, 128,
                     "../sprites/Outdoor decoration/House_1_Wood_Base_Blue.png");
+  level->water_texture = SetTextureDef("Water_Tile", 0, 48, 0, 48,
+                                       "../sprites/Tiles/Water_Middle.png");
   int height = 0;
   switch (number) {
   case 1: {
     static const char *data[] = {
         "######################################",
         "#....................................#",
-        "#....................................#",
-        "#....................................#",
-        "#.............................2......#",
-        "#....................................#",
+        "#.....#..............................#",
+        "#.....#..............................#",
+        "#.....#.......................2......#",
+        "#.....#..............................#",
         "#..1.................................#",
         "#...............O....................#",
         "#....................................#",
+        "#........@...........................#",
         "#....................................#",
-        "#....................................#",
-        "#....................................#",
+        "#.....####...........................#",
         "#....................................#",
         "#....................................#",
         "######################################",
@@ -98,7 +100,7 @@ void DrawTextureForGame(Level *level, TextureDef tdef, int x_dest, int y_dest,
   DrawTexturePro(tdef.texture, source, dest, origin, rotation, WHITE);
 }
 
-void render_level(Level *level, int screen_width, int screen_height) {
+void render_level(Level *level) {
   TILE_TYPE tile_type;
   for (int y = 0; y < level->rows; y++) {
     for (int x = 0; x < level->columns; x++) {
@@ -144,6 +146,11 @@ void render_level(Level *level, int screen_width, int screen_height) {
         DrawTextureForGame(level, level->ground_texture, x, y, 1);
       } else if (tile_type == PLAYER) {
         DrawTextureForGame(level, level->ground_texture, x, y, 1);
+      } else if (tile_type == WATER) {
+        DrawTextureForGame(level, level->water_texture, x, y, 1);
+      } else if (tile_type == HOUSE) {
+        DrawTextureForGame(level, level->ground_texture, x, y, 1);
+        DrawTextureForGame(level, level->house_texture, x, y, 1);
       } else {
         DrawTextureForGame(level, level->ground_texture, x, y, 1);
       }

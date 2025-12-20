@@ -36,8 +36,7 @@ void render_players(Player *players[], size_t player_count, Level *level);
 
 void update_position(Player *players[], int plaer_count, Level *level);
 
-void two_player_collision(Player *player1, Player *player2, Level *level,
-                          int screenWidth, int screenHeight);
+void two_player_collision(Player *player1, Player *player2, Level *level);
 bool collides_with_level(float x, float y, float radius, Level *level);
 bool is_blocked(char tile);
 

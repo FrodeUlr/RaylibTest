@@ -18,6 +18,7 @@ typedef struct Menu {
   Color player2Color;
 } Menu;
 
+void new_menu(Menu *menu);
 void draw_main_menu(Menu *menu);
 
 #endif // !DEBUG

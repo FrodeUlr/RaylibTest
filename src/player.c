@@ -1,10 +1,13 @@
 #include "../include/player.h"
 #include "../include/raylib.h"
 #include <math.h>
+#include <stdio.h>
 
-Player generate_player(char *name, float x, float y, Color color) {
+Player generate_player(char *name, PlayerType player_type, float x, float y,
+                       Color color) {
   Player player;
   player.name = name;
+  player.player_type = player_type;
   player.position = (Vector2){x, y};
   player.speed = 10.0f;
   player.acceleration = 0.0f;
@@ -12,42 +15,47 @@ Player generate_player(char *name, float x, float y, Color color) {
   player.radius = 15.0f;
   player.color = color;
   player.mass = 1.0f;
+  SetPlayerKeys(&player);
   return player;
 }
 
-bool is_right_key(bool TwoPlayer) {
-  return (TwoPlayer && IsKeyDown(KEY_D)) ||
-         (!TwoPlayer && IsKeyDown(KEY_RIGHT));
-}
-bool is_left_key(bool TwoPlayer) {
-  return (TwoPlayer && IsKeyDown(KEY_A)) || (!TwoPlayer && IsKeyDown(KEY_LEFT));
-}
-bool is_up_key(bool TwoPlayer) {
-  return (TwoPlayer && IsKeyDown(KEY_W)) || (!TwoPlayer && IsKeyDown(KEY_UP));
-}
-bool is_down_key(bool TwoPlayer) {
-  return (TwoPlayer && IsKeyDown(KEY_S)) || (!TwoPlayer && IsKeyDown(KEY_DOWN));
+void SetPlayerKeys(Player *player) {
+  if (player->player_type == PLAYER_ONE) {
+    player->keys.left = KEY_LEFT;
+    player->keys.right = KEY_RIGHT;
+    player->keys.up = KEY_UP;
+    player->keys.down = KEY_DOWN;
+    player->keys.jump = KEY_SPACE;
+  } else if (player->player_type == PLAYER_TWO) {
+    player->keys.left = KEY_A;
+    player->keys.right = KEY_D;
+    player->keys.up = KEY_W;
+    player->keys.down = KEY_S;
+    player->keys.jump = KEY_LEFT_SHIFT;
+  }
 }
 
-void update_position(Player *player, bool TwoPlayer, Level *level) {
+void update_position(Player *player, Level *level) {
   float new_x = player->position.x;
   float new_y = player->position.y;
   float radius = player->radius;
 
-  if (is_right_key(TwoPlayer))
+  if (IsKeyDown(player->keys.right))
     new_x += player->speed * GetFrameTime();
-  if (is_left_key(TwoPlayer))
+  if (IsKeyDown(player->keys.left))
     new_x -= player->speed * GetFrameTime();
-  if (is_up_key(TwoPlayer))
+  if (IsKeyDown(player->keys.up))
     new_y -= player->speed * GetFrameTime();
-  if (is_down_key(TwoPlayer))
+  if (IsKeyDown(player->keys.down))
     new_y += player->speed * GetFrameTime();
 
-  if (is_right_key(TwoPlayer) || is_left_key(TwoPlayer) ||
-      is_up_key(TwoPlayer) || is_down_key(TwoPlayer)) {
+  if (IsKeyDown(player->keys.right) || IsKeyDown(player->keys.left) ||
+      IsKeyDown(player->keys.up) || IsKeyDown(player->keys.down)) {
     if (player->speed < player->max_speed) {
       player->acceleration += 0.1f;
       player->speed += player->acceleration;
+      printf("Increased speed: %.2f -> \nIncreased acceleration %.2f -> \n",
+             player->speed, player->acceleration);
     }
   } else {
     player->acceleration = 0.0f;
@@ -203,14 +211,17 @@ void render_player(Player *player, char player_no, Level *level) {
   DrawCircleV(player->position, player->radius, player->color);
 }
 
-bool check_level_completion(Player *player, Level *level) {
-  int player_tile_x =
-      (int)((player->position.x - level->offset_x) / level->tile_size);
-  int player_tile_y =
-      (int)((player->position.y - level->offset_y) / level->tile_size);
+bool check_level_completion(Player *player[], Level *level,
+                            size_t player_count) {
+  for (int i = 0; i < player_count; i++) {
+    int player_tile_x =
+        (int)((player[i]->position.x - level->offset_x) / level->tile_size);
+    int player_tile_y =
+        (int)((player[i]->position.y - level->offset_y) / level->tile_size);
 
-  if (level->data[player_tile_y][player_tile_x] == 'O') {
-    return true;
+    if (level->data[player_tile_y][player_tile_x] == 'O') {
+      return true;
+    }
   }
   return false;
 }

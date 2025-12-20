@@ -1,29 +1,47 @@
 #ifndef PLAYER_H
 #define PLAYER_H
-#include "levels.h"
+#include "level.h"
 #include "raylib.h"
+#include <stddef.h>
+
+typedef struct PlayerKey {
+  KeyboardKey left;
+  KeyboardKey right;
+  KeyboardKey up;
+  KeyboardKey down;
+  KeyboardKey jump;
+} PlayerKey;
+
+typedef enum { PLAYER_ONE, PLAYER_TWO } PlayerType;
 
 typedef struct Player {
   char *name;
+  Color color;
   Vector2 position;
+  PlayerType player_type;
+  PlayerKey keys;
   float speed;
   float acceleration;
   float max_speed;
   float radius;
-  Color color;
   float mass;
 } Player;
 
-Player generate_player(char *name, float x, float y, Color color);
+Player generate_player(char *name, PlayerType player_type, float x, float y,
+                       Color color);
+void SetPlayerKeys(Player *player);
+void render_player(Player *player, char player_no, Level *level);
 
-void update_position(Player *player, bool TwoPlayer, Level *level);
+void update_position(Player *player, Level *level);
 
 void check_collision(Player *player, int screenWidth, int screenHeight);
 void two_player_collision(Player *player1, Player *player2, Level *level,
                           int screenWidth, int screenHeight);
-bool is_blocked(char tile);
 bool collides_with_level(float x, float y, float radius, Level *level,
                          int screenWidth, int screenHeight);
-void render_player(Player *player, char player_no, Level *level);
-bool check_level_completion(Player *player, Level *level);
+bool is_blocked(char tile);
+
+bool check_level_completion(Player *player[], Level *level,
+                            size_t player_count);
+
 #endif

@@ -1,5 +1,18 @@
 #include "../include/menu.h"
 
+void new_menu(Menu *menu) {
+  menu->player1Name[0] = '\0';
+  menu->player2Name[0] = '\0';
+  menu->player1NameLen = 0;
+  menu->player2NameLen = 0;
+  menu->editingPlayer1 = true;
+  menu->currentScreen = START;
+  menu->screenWidth = GetScreenWidth();
+  menu->screenHeight = GetScreenHeight();
+  menu->player1Color = LIME;
+  menu->player2Color = BLACK;
+}
+
 void draw_main_menu(Menu *menu) {
   int halfScreenWidth = menu->screenWidth / 2;
   int halfScreenHeight = menu->screenHeight / 2;

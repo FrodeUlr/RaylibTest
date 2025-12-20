@@ -22,10 +22,10 @@ void start_game(Config *config) {
   const int screen_height = GetScreenHeight();
   const int half_screen_width = screen_width / 2;
   const int half_screen_height = screen_height / 2;
-  Player player_one = generate_player("Player1", screen_width * 0.9f,
-                                      screen_height * 0.7f, PINK);
-  Player player_two = generate_player("Player2", screen_width * 0.1f,
-                                      screen_height * 0.3f, VIOLET);
+  Player player_one = {0};
+  Player player_two = {0};
+  Player *players[] = {&player_one, &player_two};
+  size_t player_count = sizeof(players) / sizeof(players[0]);
   SetTargetFPS(config->targetFPS);
   Level *level;
   level = malloc(sizeof(Level));
@@ -35,24 +35,19 @@ void start_game(Config *config) {
     printf("Error menu");
     return;
   }
-  menu->player1Name[0] = '\0';
-  menu->player2Name[0] = '\0';
-  menu->player1NameLen = 0;
-  menu->player2NameLen = 0;
-  menu->editingPlayer1 = true;
-  menu->currentScreen = START;
-  menu->screenWidth = screen_width;
-  menu->screenHeight = screen_height;
-  menu->player1Color = BLACK;
-  menu->player2Color = BLACK;
+  new_menu(menu);
   while (!WindowShouldClose()) {
     BeginDrawing();
     ClearBackground(RAYWHITE);
     if (currentScreen == START) {
       draw_main_menu(menu);
       if (menu->currentScreen != START) {
-        player_one.name = menu->player1Name;
-        player_two.name = menu->player2Name;
+        *players[0] =
+            generate_player(menu->player1Name, PLAYER_ONE, screen_width * 0.9f,
+                            screen_height * 0.7f, PINK);
+        *players[1] =
+            generate_player(menu->player2Name, PLAYER_TWO, screen_width * 0.1f,
+                            screen_height * 0.3f, VIOLET);
         currentScreen = menu->currentScreen;
       }
     } else if (currentScreen == GAME_OVER) {
@@ -68,8 +63,7 @@ void start_game(Config *config) {
           *level = get_level(1);
           level->first_frame = true;
         }
-        if (check_level_completion(&player_one, level) ||
-            check_level_completion(&player_two, level)) {
+        if (check_level_completion(players, level, player_count)) {
           currentScreen = LEVEL_TWO;
         }
       }
@@ -78,8 +72,7 @@ void start_game(Config *config) {
           *level = get_level(2);
           level->first_frame = true;
         }
-        if (check_level_completion(&player_one, level) ||
-            check_level_completion(&player_two, level)) {
+        if (check_level_completion(players, level, player_count)) {
           currentScreen = GAME_OVER;
         }
       }
@@ -87,8 +80,8 @@ void start_game(Config *config) {
       render_level(level, screen_width, screen_height);
       render_player(&player_one, '1', level);
       render_player(&player_two, '2', level);
-      update_position(&player_one, false, level);
-      update_position(&player_two, true, level);
+      update_position(&player_one, level);
+      update_position(&player_two, level);
 
       two_player_collision(&player_one, &player_two, level, screen_width,
                            screen_height);
@@ -106,13 +99,10 @@ void start_game(Config *config) {
       if (level->first_frame) {
         level->first_frame = false;
       }
-      char str[] = "Level first frame: ";
-      snprintf(str + 18, 2, "%s", level->first_frame ? "true" : "false");
       DrawText(fpsText, 0, 0, 20, WHITE);
       DrawText(screenInfo, 0, 20, 20, WHITE);
       DrawText(playerPosText, 0, 40, 20, WHITE);
       DrawText(player_two_pos_text, 0, 60, 20, WHITE);
-      DrawText(str, 0, 80, 20, WHITE);
     }
     EndDrawing();
   }

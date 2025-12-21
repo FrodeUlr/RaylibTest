@@ -30,7 +30,7 @@ void start_game(Game *game, Config *config) {
     printf("Error menu");
     return;
   }
-  new_menu(menu);
+  new_menu(menu, 2);
   while (game->running) {
     BeginDrawing();
     ClearBackground(RAYWHITE);
@@ -39,11 +39,12 @@ void start_game(Game *game, Config *config) {
       if (game->gameState == EXIT) {
         printf("Exiting game from main menu\n");
         game->running = false;
-      } else if (game->gameState != MAIN_MENU && menu->p1NameLen != 0 &&
-                 menu->p2NameLen != 0) {
-        generate_player(game->players[0], menu->p1Name, PLAYER_ONE,
+      } else if (game->gameState != MAIN_MENU &&
+                 menu->players[0]->nameLen != 0 &&
+                 menu->players[1]->nameLen != 0) {
+        generate_player(game->players[0], menu->players[0]->name, PLAYER_ONE,
                         screen_width * 0.9f, screen_height * 0.7f, PINK);
-        generate_player(game->players[1], menu->p2Name, PLAYER_TWO,
+        generate_player(game->players[1], menu->players[1]->name, PLAYER_TWO,
                         screen_width * 0.1f, screen_height * 0.3f, VIOLET);
       } else {
         game->gameState = MAIN_MENU;

@@ -13,22 +13,26 @@ typedef enum FocusField {
   FOCUS_FIELD_COUNT
 } FocusField;
 
+typedef struct PlayerDetails {
+  char name[16];
+  int nameLen;
+  Color color;
+  FocusField focusField;
+  Rectangle rec;
+} PlayerDetails;
+
 typedef struct Menu {
-  char p1Name[16];
-  char p2Name[16];
-  int p1NameLen;
-  int p2NameLen;
   FocusField focusField;
   int screenWidth;
   int screenHeight;
-  Color p1Color;
-  Color p2Color;
+  int playerCount;
   Color exitColor;
   Color startColor;
+  PlayerDetails **players;
 } Menu;
 
-void new_menu(Menu *menu);
+void new_menu(Menu *menu, int playerCount);
 void draw_main_menu(Menu *menu, Game *game);
 void check_inputs(Menu *menu, Game *game, Level *level);
 
-#endif // !DEBUG
+#endif

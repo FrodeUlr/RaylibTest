@@ -9,6 +9,8 @@ void generate_player(Player *player, char *name, PlayerType playerType, float x,
   player->position = (Vector2){x, y};
   player->speed = PLAYER_START_SPEED;
   player->acceleration = PLAYER_START_ACCELERATION;
+  player->velocity = (Vector2){10.0f, 10.0f};
+  player->accelerationVector = (Vector2){0.0f, 0.0f};
   player->maxSpeed = PLAYER_MAX_SPEED;
   player->radius = PLAYER_RADIUS;
   player->color = color;
@@ -38,26 +40,103 @@ void update_position(Player *players[], int playerCount, Level *level) {
     float new_x = players[i]->position.x;
     float new_y = players[i]->position.y;
     float radius = players[i]->radius;
+    float frame_time = GetFrameTime();
+    bool x_movement_key_pressed = false;
+    bool x_neg_movement_key_pressed = false;
+    bool y_movement_key_pressed = false;
+    bool y_neg_movement_key_pressed = false;
 
-    if (IsKeyDown(players[i]->keys.right))
-      new_x += players[i]->speed * GetFrameTime();
-    if (IsKeyDown(players[i]->keys.left))
-      new_x -= players[i]->speed * GetFrameTime();
-    if (IsKeyDown(players[i]->keys.up))
-      new_y -= players[i]->speed * GetFrameTime();
-    if (IsKeyDown(players[i]->keys.down))
-      new_y += players[i]->speed * GetFrameTime();
-
-    if (IsKeyDown(players[i]->keys.right) || IsKeyDown(players[i]->keys.left) ||
-        IsKeyDown(players[i]->keys.up) || IsKeyDown(players[i]->keys.down)) {
-      if (players[i]->speed < players[i]->maxSpeed) {
-        players[i]->acceleration += 0.1f;
-        players[i]->speed += players[i]->acceleration;
+    if (IsKeyDown(players[i]->keys.right)) {
+      if (players[i]->velocity.x > 0)
+        new_x += players[i]->velocity.x * frame_time;
+      if (players[i]->velocity.x < players[i]->maxSpeed &&
+          players[i]->accelerationVector.x > -0.1f) {
+        players[i]->accelerationVector.x += 0.1f;
+        players[i]->velocity.x += players[i]->accelerationVector.x;
       }
-    } else {
-      players[i]->acceleration = 0.0f;
-      players[i]->speed = 10.0f;
+      x_movement_key_pressed = true;
+    } else if (IsKeyDown(players[i]->keys.left)) {
+      if (players[i]->velocity.x < 0)
+        new_x += players[i]->velocity.x * frame_time;
+      if (players[i]->velocity.x > -players[i]->maxSpeed &&
+          players[i]->accelerationVector.x < 0.1f) {
+        players[i]->accelerationVector.x -= 0.1f;
+        players[i]->velocity.x += players[i]->accelerationVector.x;
+      }
+      x_neg_movement_key_pressed = true;
     }
+    if (IsKeyDown(players[i]->keys.down)) {
+      if (players[i]->velocity.y > 0)
+        new_y += players[i]->velocity.y * frame_time;
+      if (players[i]->velocity.y < players[i]->maxSpeed &&
+          players[i]->accelerationVector.y > -0.1f) {
+        players[i]->accelerationVector.y += 0.1f;
+        players[i]->velocity.y += players[i]->accelerationVector.y;
+      }
+      y_movement_key_pressed = true;
+    } else if (IsKeyDown(players[i]->keys.up)) {
+      if (players[i]->velocity.y < 0)
+        new_y += players[i]->velocity.y * frame_time;
+      if (players[i]->velocity.y > -players[i]->maxSpeed &&
+          players[i]->accelerationVector.y < 0.1f) {
+        players[i]->accelerationVector.y -= 0.1f;
+        players[i]->velocity.y += players[i]->accelerationVector.y;
+      }
+      y_neg_movement_key_pressed = true;
+    }
+
+    if (!x_movement_key_pressed && players[i]->accelerationVector.x > 0) {
+      if (players[i]->velocity.x < 10.0f) {
+        players[i]->accelerationVector.x = 0.0f;
+        players[i]->velocity.x = 0.0f;
+      } else {
+        players[i]->accelerationVector.x -= 0.1f;
+        players[i]->velocity.x -= players[i]->accelerationVector.x;
+        new_x += players[i]->velocity.x * frame_time;
+      }
+    }
+    if (!x_neg_movement_key_pressed && players[i]->accelerationVector.x < 0) {
+      if (players[i]->velocity.x > -10.0f) {
+        players[i]->accelerationVector.x = 0.0f;
+        players[i]->velocity.x = 0.0f;
+      } else {
+        players[i]->accelerationVector.x += 0.1f;
+        players[i]->velocity.x -= players[i]->accelerationVector.x;
+        new_x += players[i]->velocity.x * frame_time;
+      }
+    }
+    if (!y_movement_key_pressed && players[i]->accelerationVector.y > 0) {
+      if (players[i]->velocity.y < 10.0f) {
+        players[i]->accelerationVector.y = 0.0f;
+        players[i]->velocity.y = 0.0f;
+      } else {
+        players[i]->accelerationVector.y -= 0.1f;
+        players[i]->velocity.y -= players[i]->accelerationVector.y;
+        new_y += players[i]->velocity.y * frame_time;
+      }
+    }
+    if (!y_neg_movement_key_pressed && players[i]->accelerationVector.y < 0) {
+      if (players[i]->velocity.y > -10.0f) {
+        players[i]->accelerationVector.y = 0.0f;
+        players[i]->velocity.y = 0.0f;
+      } else {
+        players[i]->accelerationVector.y += 0.1f;
+        players[i]->velocity.y -= players[i]->accelerationVector.y;
+        new_y += players[i]->velocity.y * frame_time;
+      }
+    }
+    /* if (IsKeyDown(players[i]->keys.right) || IsKeyDown(players[i]->keys.left)
+     * || */
+    /*     IsKeyDown(players[i]->keys.up) || IsKeyDown(players[i]->keys.down)) {
+     */
+    /*   if (players[i]->speed < players[i]->maxSpeed) { */
+    /*     players[i]->acceleration += 0.1f * frame_time; */
+    /*     players[i]->speed += players[i]->acceleration; */
+    /*   } */
+    /* } else { */
+    /*   players[i]->acceleration = 0.0f; */
+    /*   players[i]->speed = 10.0f; */
+    /* } */
 
     // Convert position to tile coordinates, accounting for scaling and offset
     int left_tile = (int)((new_x - radius - level->offsetX) / level->tileSize);

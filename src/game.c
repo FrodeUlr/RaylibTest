@@ -20,7 +20,9 @@ void start_game(Game *game, Config *config) {
   const int screen_height = GetScreenHeight();
   const int half_screen_width = screen_width / 2;
   const int half_screen_height = screen_height / 2;
-  SetTargetFPS(config->targetFPS);
+  if (config->targetFPS >= 24) {
+    SetTargetFPS(config->targetFPS);
+  }
   Level *level = malloc(sizeof(Level));
   game->level = level;
   initialize_players(game, 2);
@@ -120,7 +122,12 @@ void draw_ui(Player *players[], int playerCount, int screenWidth,
     const char *position_text =
         TextFormat("%s Pos: (%.2f, %.2f)", players[i]->name,
                    players[i]->position.x, players[i]->position.y);
+    const char *player_speeds = TextFormat(
+        "%s Speed: x->%.2f y->%.2f Accel: x->%.2f y->%.2f", players[i]->name,
+        players[i]->velocity.x, players[i]->velocity.y,
+        players[i]->accelerationVector.x, players[i]->accelerationVector.y);
     DrawText(position_text, 0, 40 + i * 20, 20, WHITE);
+    DrawText(player_speeds, 0, 90 + i * 20, 20, WHITE);
   }
   DrawText(fpsText, 0, 0, 20, WHITE);
   DrawText(screenInfo, 0, 20, 20, WHITE);

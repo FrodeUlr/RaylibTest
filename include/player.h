@@ -22,6 +22,8 @@ typedef struct Player {
   PlayerType playerType;
   PlayerKey keys;
   float speed;
+  Vector2 velocity;
+  Vector2 accelerationVector;
   float acceleration;
   float maxSpeed;
   float radius;

@@ -6,7 +6,11 @@
 #include <string.h>
 #include <unistd.h>
 
-void get(const char *filename, char *buffer, size_t buffer_size) {
+static char executable_dir_buffer[PATH_MAX];
+const char *EXECUTABLE_PATH = NULL;
+
+void get(const char *filename, char *buffer, size_t buffer_size,
+         Config *config) {
   char exe_path[PATH_MAX];
   ssize_t len = readlink("/proc/self/exe", exe_path, sizeof(exe_path) - 1);
   if (len == -1) {
@@ -21,27 +25,29 @@ void get(const char *filename, char *buffer, size_t buffer_size) {
   exe_dir[sizeof(exe_dir) - 1] = '\0';
 
   char *dir = dirname(exe_dir);
-  printf("Executable directory: %s\n", dir);
   snprintf(buffer, buffer_size, "%s/%s", dir, filename);
+  strncpy(executable_dir_buffer, dir, sizeof(executable_dir_buffer) - 1);
+  executable_dir_buffer[sizeof(executable_dir_buffer) - 1] = '\0';
+  EXECUTABLE_PATH = executable_dir_buffer;
 }
 
 void load(Config *config, const char *filename) {
   char configPath[PATH_MAX];
-  get(filename, configPath, PATH_MAX);
+  get(filename, configPath, PATH_MAX, config);
+  printf("Executable directory: %s\n", EXECUTABLE_PATH);
   printf("Loading config from: %s\n", configPath);
-  set_default(config);
   FILE *file = fopen(configPath, "r");
   if (!file) {
+    printf("Failed to open default config.cfg\n");
+    printf("Creating default config at: %s\n", configPath);
+    set_default(config);
     file = fopen(configPath, "w");
     if (file) {
-      printf("Failed to open default config.cfg");
       fprintf(file, "screenWidth=%d\n", config->screenWidth);
       fprintf(file, "screenHeight=%d\n", config->screenHeight);
       fprintf(file, "targetFPS=%d\n", config->targetFPS);
       fprintf(file, "fullscreen=%s\n", config->fullscreen ? "true" : "false");
       fclose(file);
-    } else {
-      printf("Failed to open config file, using defaults\n");
     }
     return;
   }

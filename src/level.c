@@ -1,5 +1,8 @@
 #include "../include/level.h"
+#include "../include/config.h"
 #include "../include/raylib.h"
+#include <linux/limits.h>
+#include <stdio.h>
 #include <string.h>
 
 void set_offset(Level *level) {
@@ -15,15 +18,39 @@ void set_offset(Level *level) {
   level->offset_y = (screen_height - level_pixel_height) / 2;
 }
 
+char *get_absolute_path(const char *relative_path) {
+  if (relative_path == NULL) {
+    return NULL;
+  }
+  if (strcmp(relative_path, "") == 0) {
+    return "";
+  }
+  if (strncmp(relative_path, "../", 3) == 0) {
+    relative_path += 3;
+  }
+  static char absolute_path[PATH_MAX];
+  if (EXECUTABLE_PATH != NULL) {
+    snprintf(absolute_path, sizeof(absolute_path), "%s/%s", EXECUTABLE_PATH,
+             relative_path);
+  } else {
+    snprintf(absolute_path, sizeof(absolute_path), "%s", relative_path);
+  }
+  printf("Resolved absolute path: %s\n", absolute_path);
+  return absolute_path;
+}
+
 void set_level(Level *level, int number) {
   const char **level_data = NULL;
-  level->target_texture = SetTextureDef(
-      "Target_Tile", 0, 16, 0, 16, "../sprites/Outdoor decoration/Chest.png");
-  level->house_texture =
-      SetTextureDef("House_Tile", 0, 96, 0, 128,
-                    "../sprites/Outdoor decoration/House_1_Wood_Base_Blue.png");
-  level->water_texture = SetTextureDef("Water_Tile", 0, 48, 0, 48,
-                                       "../sprites/Tiles/Water_Middle.png");
+  level->target_texture =
+      SetTextureDef("Target_Tile", 0, 16, 0, 16,
+                    get_absolute_path("../art/Outdoor decoration/Chest.png"));
+  level->house_texture = SetTextureDef(
+      "House_Tile", 0, 96, 0, 128,
+      get_absolute_path(
+          "../art/Outdoor decoration/House_1_Wood_Base_Blue.png"));
+  level->water_texture =
+      SetTextureDef("Water_Tile", 0, 48, 0, 48,
+                    get_absolute_path("../art/Tiles/Water_Middle.png"));
   int height = 0;
   switch (number) {
   case 1: {
@@ -47,10 +74,12 @@ void set_level(Level *level, int number) {
 
     height = sizeof(data) / sizeof(data[0]);
     level->data = data;
-    level->wall_texture = SetTextureDef("Stone_Tile", 0, 48, 0, 48,
-                                        "../sprites/Tiles/FarmLand_Tile.png");
-    level->ground_texture = SetTextureDef("Ground_Tile", 0, 48, 0, 48,
-                                          "../sprites/Tiles/Grass_Middle.png");
+    level->wall_texture =
+        SetTextureDef("Stone_Tile", 0, 48, 0, 48,
+                      get_absolute_path("../art/Tiles/FarmLand_Tile.png"));
+    level->ground_texture =
+        SetTextureDef("Ground_Tile", 0, 48, 0, 48,
+                      get_absolute_path("../art/Tiles/Grass_Middle.png"));
     break;
   }
   case 2: {
@@ -73,10 +102,12 @@ void set_level(Level *level, int number) {
     };
     height = sizeof(data) / sizeof(data[0]);
     level->data = data;
-    level->wall_texture = SetTextureDef("Stone_Tile", 0, 48, 0, 48,
-                                        "../sprites/Tiles/Cliff_Tile.png");
-    level->ground_texture = SetTextureDef("Ground_Tile", 0, 48, 0, 48,
-                                          "../sprites/Tiles/Path_Middle.png");
+    level->wall_texture =
+        SetTextureDef("Stone_Tile", 0, 48, 0, 48,
+                      get_absolute_path("../art/Tiles/Cliff_Tile.png"));
+    level->ground_texture =
+        SetTextureDef("Ground_Tile", 0, 48, 0, 48,
+                      get_absolute_path("../art/Tiles/Path_Middle.png"));
     level->first_frame = true;
     break;
   }

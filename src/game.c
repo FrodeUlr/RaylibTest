@@ -91,7 +91,6 @@ void start_game(Game *game, Config *config) {
   }
   for (size_t i = 0; i < game->player_count; i++) {
     if (game->players[i] != NULL) {
-      printf("cleaning player %zu\n", i);
       free(game->players[i]);
     }
   }

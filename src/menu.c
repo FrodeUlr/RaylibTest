@@ -2,6 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+const MenuButton menu_buttons[] = {
+    {"Start Game", START_BUTTON, LEVEL_ONE},
+    {"Exit", EXIT_BUTTON, EXIT},
+};
+
 void generate_player_field(Menu *menu) {
   for (int i = 0; i < menu->playerCount; i++) {
     int halfScreenWidth = menu->screenWidth / 2;
@@ -16,15 +21,29 @@ void generate_player_field(Menu *menu) {
   }
 }
 
+void generate_button_fields(Menu *menu) {
+  for (int i = 0; i < menu->buttonCount; i++) {
+    menu->buttons[i] = malloc(sizeof(Button));
+    menu->buttons[i]->text = menu_buttons[i].label;
+    menu->buttons[i]->rec =
+        (Rectangle){((float)menu->screenWidth / 2) - 100,
+                    ((float)menu->screenHeight / 2) + (i * 60), 200, 40};
+    menu->buttons[i]->color = DARKGRAY;
+    menu->buttons[i]->focusField = menu_buttons[i].focusField;
+    menu->buttons[i]->action = menu_buttons[i].action;
+  }
+}
+
 void new_menu(Menu *menu, int playerCount) {
   menu->focusField = PLAYER1_NAME;
   menu->playerCount = playerCount;
+  menu->buttonCount = sizeof(menu_buttons) / sizeof(menu_buttons[0]);
   menu->screenWidth = GetScreenWidth();
   menu->screenHeight = GetScreenHeight();
-  menu->exitColor = DARKGRAY;
-  menu->startColor = DARKGRAY;
   menu->players = malloc(sizeof(PlayerDetails *) * playerCount);
+  menu->buttons = malloc(sizeof(Button *) * menu->buttonCount);
   generate_player_field(menu);
+  generate_button_fields(menu);
 }
 
 void draw_player_name_input(Rectangle rec, const char *label,
@@ -63,55 +82,49 @@ void draw_main_menu(Menu *menu, Game *game) {
   //
   // Buttons
   //
-  Rectangle rec_start = {.height = 40,
-                         .width = 200,
-                         .x = halfScreenWidth - 100,
-                         .y = halfScreenHeight};
-  DrawRectanglePro(rec_start, (Vector2){0, 0}, 0.0f, menu->startColor);
-  DrawText("START", halfScreenWidth - 37, halfScreenHeight + 10, 20, WHITE);
-
-  Rectangle rec_exit = {.height = 40,
-                        .width = 200,
-                        .x = halfScreenWidth - 100,
-                        .y = halfScreenHeight + 60};
-  DrawRectanglePro(rec_exit, (Vector2){0, 0}, 0.0f, menu->exitColor);
-  DrawText("EXIT", halfScreenWidth - 28, halfScreenHeight + 70, 20, WHITE);
-
+  for (int i = 0; i < menu->buttonCount; i++) {
+    DrawRectanglePro(menu->buttons[i]->rec, (Vector2){0, 0}, 0.0f,
+                     menu->buttons[i]->color);
+    DrawText(menu->buttons[i]->text,
+             menu->buttons[i]->rec.x + (menu->buttons[i]->rec.width / 2) -
+                 ((float)MeasureText(menu->buttons[i]->text, 20) / 2),
+             menu->buttons[i]->rec.y + 10, 20, WHITE);
+  }
   //
   // Check collisions
   //
-  if (handle_menu_button(menu->players[0]->rec, &menu->players[0]->color, LIME,
-                         BLACK, menu->focusField != PLAYER1_NAME)) {
-    menu->focusField = PLAYER1_NAME;
+  for (int i = 0; i < menu->playerCount; i++) {
+    if (handle_menu_button(menu->players[i]->rec, &menu->players[i]->color,
+                           LIME, BLACK,
+                           menu->focusField != menu->players[i]->focusField)) {
+      menu->focusField = menu->players[i]->focusField;
+    }
   }
-  if (handle_menu_button(menu->players[1]->rec, &menu->players[1]->color, LIME,
-                         BLACK, menu->focusField != PLAYER2_NAME)) {
-    menu->focusField = PLAYER2_NAME;
-  }
-  if (handle_menu_button(rec_start, &menu->startColor, LIME, DARKGRAY,
-                         menu->focusField != START_BUTTON)) {
-    game->gameState = LEVEL_ONE;
-  }
-  if (handle_menu_button(rec_exit, &menu->exitColor, RED, DARKGRAY,
-                         menu->focusField != EXIT_BUTTON)) {
-    game->gameState = EXIT;
+  for (int i = 0; i < menu->buttonCount; i++) {
+    if (handle_menu_button(menu->buttons[i]->rec, &menu->buttons[i]->color,
+                           LIME, DARKGRAY,
+                           menu->focusField != menu->buttons[i]->focusField)) {
+      game->gameState = menu->buttons[i]->action;
+    }
   }
   //
   // Check inputs
   //
   if (IsKeyPressed(KEY_TAB)) {
     menu->focusField = (menu->focusField + 1) % FOCUS_FIELD_COUNT;
-    if (menu->focusField == START_BUTTON) {
-      menu->startColor = LIME;
-    } else if (menu->focusField == EXIT_BUTTON) {
-      menu->exitColor = RED;
-    } else {
-      for (int i = 0; i < menu->playerCount; i++) {
-        if (menu->focusField == menu->players[i]->focusField) {
-          menu->players[i]->color = LIME;
-        } else {
-          menu->players[i]->color = BLACK;
-        }
+    for (int i = 0; i < menu->buttonCount; i++) {
+      if (menu->focusField == menu->buttons[i]->focusField) {
+        menu->buttons[i]->color =
+            (menu->buttons[i]->focusField == START_BUTTON) ? LIME : RED;
+      } else {
+        menu->buttons[i]->color = DARKGRAY;
+      }
+    }
+    for (int i = 0; i < menu->playerCount; i++) {
+      if (menu->focusField == menu->players[i]->focusField) {
+        menu->players[i]->color = LIME;
+      } else {
+        menu->players[i]->color = BLACK;
       }
     }
   }
@@ -160,5 +173,11 @@ void free_menu(Menu *menu) {
       free(menu->players[i]);
     }
     free(menu->players);
+  }
+  if (menu->buttons != NULL) {
+    for (int i = 0; i < menu->buttonCount; i++) {
+      free(menu->buttons[i]);
+    }
+    free(menu->buttons);
   }
 }

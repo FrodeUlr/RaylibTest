@@ -47,9 +47,9 @@ void start_game(Game *game, Config *config) {
                  menu->players[0]->nameLen != 0 &&
                  menu->players[1]->nameLen != 0) {
         generate_player(game->players[0], menu->players[0]->name, PLAYER_ONE,
-                        screen_width * 0.9f, screen_height * 0.7f, PINK);
+                        screen_width * 0.9f, screen_height * 0.7f, RAYWHITE);
         generate_player(game->players[1], menu->players[1]->name, PLAYER_TWO,
-                        screen_width * 0.1f, screen_height * 0.3f, VIOLET);
+                        screen_width * 0.1f, screen_height * 0.3f, BEIGE);
       } else {
         game->gameState = MAIN_MENU;
       }

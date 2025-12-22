@@ -9,6 +9,27 @@
 static char executable_dir_buffer[PATH_MAX];
 const char *EXECUTABLE_PATH = NULL;
 
+char *get_absolute_path(const char *relativePath) {
+  if (relativePath == NULL) {
+    return NULL;
+  }
+  if (strcmp(relativePath, "") == 0) {
+    return "";
+  }
+  if (strncmp(relativePath, "../", 3) == 0) {
+    relativePath += 3;
+  }
+  static char absolute_path[PATH_MAX];
+  if (EXECUTABLE_PATH != NULL) {
+    snprintf(absolute_path, sizeof(absolute_path), "%s/%s", EXECUTABLE_PATH,
+             relativePath);
+  } else {
+    snprintf(absolute_path, sizeof(absolute_path), "%s", relativePath);
+  }
+  printf("Resolved absolute path: %s\n", absolute_path);
+  return absolute_path;
+}
+
 void get(const char *fileName, char *buffer, size_t bufferSize,
          Config *config) {
   char exe_path[PATH_MAX];

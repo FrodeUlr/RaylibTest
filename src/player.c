@@ -1,4 +1,5 @@
 #include "../include/player.h"
+#include "../include/config.h"
 #include <math.h>
 #include <stdio.h>
 
@@ -15,11 +16,12 @@ void generate_player(Player *player, char *name, PlayerType playerType, float x,
   player->radius = PLAYER_RADIUS;
   player->color = color;
   player->mass = PLAYER_MASS;
-  SetPlayerKeys(player);
+  set_player_keys(player);
+  set_player_texture(player);
   player->number = (playerType == PLAYER_ONE) ? '1' : '2';
 }
 
-void SetPlayerKeys(Player *player) {
+void set_player_keys(Player *player) {
   if (player->playerType == PLAYER_ONE) {
     player->keys.left = KEY_A;
     player->keys.right = KEY_D;
@@ -33,6 +35,13 @@ void SetPlayerKeys(Player *player) {
     player->keys.down = KEY_DOWN;
     player->keys.jump = KEY_SPACE;
   }
+}
+
+void set_player_texture(Player *player) {
+  player->idle = SetTextureDef("idle", 7, 22, 2, 25,
+                               get_absolute_path("../art/Player/Player.png"));
+  player->run = SetTextureDef("run", 7, 22, 129, 154,
+                              get_absolute_path("../art/Player/Player.png"));
 }
 
 void handle_axis_movement(int positive_key, int negative_key, float *velocity,
@@ -275,6 +284,21 @@ bool collides_with_level(float x, float y, float radius, Level *level) {
   return false;
 }
 
+void draw_player_texture(Level *level, TextureDef tdef, float x, float y,
+                         float customScale, Player *player, bool flip) {
+  float scale = level->tileSize / (float)tdef.endX * customScale;
+  Rectangle source = {tdef.startX, tdef.startY, tdef.endX, tdef.endY};
+  if (flip) {
+    source.x += tdef.endX;     // Move to the right edge
+    source.width = -tdef.endX; // Negative width flips horizontally
+  }
+  Rectangle dest = {x - (tdef.endX * scale) / 2, y - (tdef.endY * scale) / 2,
+                    tdef.endX * scale, tdef.endY * scale};
+  Vector2 origin = {0, 0};
+  float rotation = 0.0f;
+  DrawTexturePro(tdef.texture, source, dest, origin, rotation, player->color);
+}
+
 void render_players(Player *players[], size_t playerCount, Level *level) {
   for (size_t i = 0; i < playerCount; i++) {
     if (level->firstFrame) {
@@ -295,7 +319,8 @@ void render_players(Player *players[], size_t playerCount, Level *level) {
     float middle_x = players[i]->position.x - name_size / 2;
     DrawText(players[i]->name, middle_x,
              players[i]->position.y - players[i]->radius - 25, 20, WHITE);
-    DrawCircleV(players[i]->position, players[i]->radius, players[i]->color);
+    draw_player_texture(level, players[i]->idle, players[i]->position.x,
+                        players[i]->position.y, 1.0f, players[i], false);
   }
 }
 
@@ -312,4 +337,9 @@ bool check_level_completion(Player *players[], Level *level,
     }
   }
   return false;
+}
+
+void reset_player_movement(Player *player) {
+  player->velocity = (Vector2){0.0f, 0.0f};
+  player->accelerationVector = (Vector2){0.0f, 0.0f};
 }

@@ -20,8 +20,10 @@ void start_game(Game *game, Config *config) {
   const int screen_height = GetScreenHeight();
   const int half_screen_width = screen_width / 2;
   const int half_screen_height = screen_height / 2;
-  if (config->targetFPS >= 24) {
+  if (config->targetFPS >= 24 && config->targetFPS <= 240) {
     SetTargetFPS(config->targetFPS);
+  } else {
+    SetTargetFPS(60);
   }
   Level *level = malloc(sizeof(Level));
   game->level = level;
@@ -35,8 +37,8 @@ void start_game(Game *game, Config *config) {
   new_menu(menu, 2);
   while (game->running) {
     BeginDrawing();
-    ClearBackground(RAYWHITE);
     if (game->gameState == MAIN_MENU) {
+      ClearBackground(RAYWHITE);
       draw_main_menu(menu, game);
       if (game->gameState == EXIT) {
         printf("Exiting game from main menu\n");
@@ -52,14 +54,19 @@ void start_game(Game *game, Config *config) {
         game->gameState = MAIN_MENU;
       }
     } else if (game->gameState == GAME_OVER) {
+      ClearBackground(RAYWHITE);
       DrawText("GAME OVER", half_screen_width - 100, half_screen_height - 20,
                40, BLACK);
       if (IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_ESCAPE)) {
         game->gameState = MAIN_MENU;
       }
     } else if (game->gameState != MAIN_MENU || game->gameState != EXIT) {
+      ClearBackground(BLACK);
       if (game->gameState == LEVEL_ONE) {
         if (level->number != 1) {
+          for (int i = 0; i < game->playerCount; i++) {
+            reset_player_movement(game->players[i]);
+          }
           set_level(level, 1);
           level->firstFrame = true;
         }
@@ -70,6 +77,9 @@ void start_game(Game *game, Config *config) {
       }
       if (game->gameState == LEVEL_TWO) {
         if (level->number != 2) {
+          for (int i = 0; i < game->playerCount; i++) {
+            reset_player_movement(game->players[i]);
+          }
           set_level(level, 2);
           level->firstFrame = true;
         }
@@ -78,7 +88,6 @@ void start_game(Game *game, Config *config) {
           game->gameState = GAME_OVER;
         }
       }
-      ClearBackground(BLACK);
       render_level(level);
       update_position(game->players, game->playerCount, level);
       players_collision(game->players, game->playerCount, level);
@@ -92,6 +101,40 @@ void start_game(Game *game, Config *config) {
     }
     EndDrawing();
   }
+  free_menu(menu);
+  free_game(game);
+  CloseWindow();
+}
+
+void draw_ui(Player *players[], int playerCount, int screenWidth,
+             int screenHeight) {
+  const char *fpsText = TextFormat("FPS: %d", GetFPS());
+  const char *screenInfo =
+      TextFormat("Screen: %dx%d", screenWidth, screenHeight);
+  DrawText(fpsText, 0, 0, 20, WHITE);
+  DrawText(screenInfo, 0, 20, 20, WHITE);
+  for (size_t i = 0; i < playerCount; i++) {
+    const char *position_text =
+        TextFormat("%s Pos: (%.2f, %.2f)", players[i]->name,
+                   players[i]->position.x, players[i]->position.y);
+    const char *player_speeds = TextFormat(
+        "Speed: x->%.2f y->%.2f Accel: x->%.2f y->%.2f", players[i]->velocity.x,
+        players[i]->velocity.y, players[i]->accelerationVector.x,
+        players[i]->accelerationVector.y);
+    DrawText(position_text, 0, 40 + i * 20, 20, WHITE);
+    DrawText(player_speeds, 300, 40 + i * 20, 20, WHITE);
+  }
+}
+
+void initialize_players(Game *game, int player_count) {
+  game->playerCount = player_count;
+  game->players = malloc(sizeof(Player *) * game->playerCount);
+  for (int i = 0; i < player_count; i++) {
+    game->players[i] = malloc(sizeof(Player));
+  }
+}
+
+void free_game(Game *game) {
   for (size_t i = 0; i < game->playerCount; i++) {
     if (game->players[i] != NULL) {
       free(game->players[i]);
@@ -106,37 +149,5 @@ void start_game(Game *game, Config *config) {
     UnloadTexture(game->level->targetTexture.texture);
     UnloadTexture(game->level->houseTexture.texture);
     free(game->level);
-  }
-  if (menu != NULL) {
-    free(menu);
-  }
-  CloseWindow();
-}
-
-void draw_ui(Player *players[], int playerCount, int screenWidth,
-             int screenHeight) {
-  const char *fpsText = TextFormat("FPS: %d", GetFPS());
-  const char *screenInfo =
-      TextFormat("Screen: %dx%d", screenWidth, screenHeight);
-  for (size_t i = 0; i < playerCount; i++) {
-    const char *position_text =
-        TextFormat("%s Pos: (%.2f, %.2f)", players[i]->name,
-                   players[i]->position.x, players[i]->position.y);
-    const char *player_speeds = TextFormat(
-        "%s Speed: x->%.2f y->%.2f Accel: x->%.2f y->%.2f", players[i]->name,
-        players[i]->velocity.x, players[i]->velocity.y,
-        players[i]->accelerationVector.x, players[i]->accelerationVector.y);
-    DrawText(position_text, 0, 40 + i * 20, 20, WHITE);
-    DrawText(player_speeds, 0, 90 + i * 20, 20, WHITE);
-  }
-  DrawText(fpsText, 0, 0, 20, WHITE);
-  DrawText(screenInfo, 0, 20, 20, WHITE);
-}
-
-void initialize_players(Game *game, int player_count) {
-  game->playerCount = player_count;
-  game->players = malloc(sizeof(Player *) * game->playerCount);
-  for (int i = 0; i < player_count; i++) {
-    game->players[i] = malloc(sizeof(Player));
   }
 }

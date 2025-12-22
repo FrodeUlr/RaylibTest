@@ -2,7 +2,6 @@
 #include "../include/config.h"
 #include "../include/raylib.h"
 #include <linux/limits.h>
-#include <stdio.h>
 #include <string.h>
 
 void set_offset(Level *level) {
@@ -16,27 +15,6 @@ void set_offset(Level *level) {
   int level_pixel_height = level->tileSize * level->rows;
   level->offsetX = (screen_width - level_pixel_width) / 2;
   level->offsetY = (screen_height - level_pixel_height) / 2;
-}
-
-char *get_absolute_path(const char *relativePath) {
-  if (relativePath == NULL) {
-    return NULL;
-  }
-  if (strcmp(relativePath, "") == 0) {
-    return "";
-  }
-  if (strncmp(relativePath, "../", 3) == 0) {
-    relativePath += 3;
-  }
-  static char absolute_path[PATH_MAX];
-  if (EXECUTABLE_PATH != NULL) {
-    snprintf(absolute_path, sizeof(absolute_path), "%s/%s", EXECUTABLE_PATH,
-             relativePath);
-  } else {
-    snprintf(absolute_path, sizeof(absolute_path), "%s", relativePath);
-  }
-  printf("Resolved absolute path: %s\n", absolute_path);
-  return absolute_path;
 }
 
 void set_level(Level *level, int number) {

@@ -13,5 +13,6 @@ typedef struct Config {
 
 void load(Config *config, const char *filename);
 void set_default(Config *config);
+char *get_absolute_path(const char *relativePath);
 
 #endif

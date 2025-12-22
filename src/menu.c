@@ -153,3 +153,12 @@ void check_inputs(Menu *menu, Game *game, Level *level) {
     level->firstFrame = true;
   }
 }
+
+void free_menu(Menu *menu) {
+  if (menu->players != NULL) {
+    for (int i = 0; i < menu->playerCount; i++) {
+      free(menu->players[i]);
+    }
+    free(menu->players);
+  }
+}

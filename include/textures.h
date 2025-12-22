@@ -11,7 +11,21 @@ typedef struct TextureDef {
   Texture2D texture;
 } TextureDef;
 
+typedef struct AnimationFrame {
+  int frameWidth;
+  int frameHeight;
+  int maxFrames;
+  int currentFrame;
+  int framesCount;
+  int framesSpeed;
+  Rectangle frameRect;
+  Vector2 position;
+  Texture2D texture;
+} AnimationFrame;
+
 TextureDef SetTextureDef(const char *name, int startX, int endX, int startY,
                          int endY, char *texturePath);
+AnimationFrame SetAnimationFrame(Texture2D texture, int maxFramesW,
+                                 int maxFramesH, int startX, int startY);
 
 #endif // !DEBUG

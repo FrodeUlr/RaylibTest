@@ -3,6 +3,7 @@
 #include "constants.h"
 #include "level.h"
 #include "raylib.h"
+#include "textures.h"
 #include <stddef.h>
 
 typedef struct PlayerKey {
@@ -29,11 +30,14 @@ typedef struct Player {
   float radius;
   float mass;
   char number;
+  TextureDef idle;
+  TextureDef run;
 } Player;
 
 void generate_player(Player *player, char *name, PlayerType playerType, float x,
                      float y, Color color);
-void SetPlayerKeys(Player *player);
+void set_player_keys(Player *player);
+void set_player_texture(Player *player);
 void render_players(Player *players[], size_t playerCount, Level *level);
 
 void update_position(Player *players[], int plaerCount, Level *level);
@@ -45,5 +49,5 @@ bool is_blocked(char tile);
 
 bool check_level_completion(Player *players[], Level *level,
                             size_t playerCount);
-
+void reset_player_movement(Player *player);
 #endif

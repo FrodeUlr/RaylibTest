@@ -1,16 +1,27 @@
 PROJECT_NAME = raylibtest
 
-.PHONY: all build run clean
+CC      = cc
+SRC     = src/*.c
+INCLUDES= -I./include
+LIBS    = -L./lib -l:libraylib.a -lm
+OUT     = ./bin/$(PROJECT_NAME)
+
+.PHONY: all build run clean debug
 
 all: build run
 
 build:
 	@mkdir -p bin
 	@cp -r art bin/
-	@cc -o ./bin/raylibtest -I./include src/*.c -L./lib -l:libraylib.a -lm
+	$(CC) -o $(OUT) $(INCLUDES) $(SRC) $(LIBS)
+
+debug:
+	@mkdir -p bin
+	@cp -r art bin/
+	$(CC) -g -o $(OUT) $(INCLUDES) $(SRC) $(LIBS)
 
 run:
-	@./bin/raylibtest
+	@$(OUT)
 
 clean:
 	@rm -rf bin

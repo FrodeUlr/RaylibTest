@@ -1,0 +1,93 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-I./include",
+      "-o",
+      "./bin/raylibtest",
+      "src/config.c"
+    ],
+    "directory": "/home/arosh/00_Repos/raylibtest",
+    "file": "/home/arosh/00_Repos/raylibtest/src/config.c",
+    "output": "/home/arosh/00_Repos/raylibtest/bin/raylibtest"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-I./include",
+      "-o",
+      "./bin/raylibtest",
+      "src/game.c"
+    ],
+    "directory": "/home/arosh/00_Repos/raylibtest",
+    "file": "/home/arosh/00_Repos/raylibtest/src/game.c",
+    "output": "/home/arosh/00_Repos/raylibtest/bin/raylibtest"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-I./include",
+      "-o",
+      "./bin/raylibtest",
+      "src/level.c"
+    ],
+    "directory": "/home/arosh/00_Repos/raylibtest",
+    "file": "/home/arosh/00_Repos/raylibtest/src/level.c",
+    "output": "/home/arosh/00_Repos/raylibtest/bin/raylibtest"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-I./include",
+      "-o",
+      "./bin/raylibtest",
+      "src/main.c"
+    ],
+    "directory": "/home/arosh/00_Repos/raylibtest",
+    "file": "/home/arosh/00_Repos/raylibtest/src/main.c",
+    "output": "/home/arosh/00_Repos/raylibtest/bin/raylibtest"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-I./include",
+      "-o",
+      "./bin/raylibtest",
+      "src/menu.c"
+    ],
+    "directory": "/home/arosh/00_Repos/raylibtest",
+    "file": "/home/arosh/00_Repos/raylibtest/src/menu.c",
+    "output": "/home/arosh/00_Repos/raylibtest/bin/raylibtest"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-I./include",
+      "-o",
+      "./bin/raylibtest",
+      "src/player.c"
+    ],
+    "directory": "/home/arosh/00_Repos/raylibtest",
+    "file": "/home/arosh/00_Repos/raylibtest/src/player.c",
+    "output": "/home/arosh/00_Repos/raylibtest/bin/raylibtest"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-c",
+      "-I./include",
+      "-o",
+      "./bin/raylibtest",
+      "src/textures.c"
+    ],
+    "directory": "/home/arosh/00_Repos/raylibtest",
+    "file": "/home/arosh/00_Repos/raylibtest/src/textures.c",
+    "output": "/home/arosh/00_Repos/raylibtest/bin/raylibtest"
+  }
+]

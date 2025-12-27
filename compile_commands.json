@@ -5,12 +5,12 @@
       "-c",
       "-I./include",
       "-o",
-      "./bin/raylibtest",
+      "./bin/release/raylibtest",
       "src/config.c"
     ],
     "directory": "/home/arosh/00_Repos/raylibtest",
     "file": "/home/arosh/00_Repos/raylibtest/src/config.c",
-    "output": "/home/arosh/00_Repos/raylibtest/bin/raylibtest"
+    "output": "/home/arosh/00_Repos/raylibtest/bin/release/raylibtest"
   },
   {
     "arguments": [
@@ -18,12 +18,12 @@
       "-c",
       "-I./include",
       "-o",
-      "./bin/raylibtest",
+      "./bin/release/raylibtest",
       "src/game.c"
     ],
     "directory": "/home/arosh/00_Repos/raylibtest",
     "file": "/home/arosh/00_Repos/raylibtest/src/game.c",
-    "output": "/home/arosh/00_Repos/raylibtest/bin/raylibtest"
+    "output": "/home/arosh/00_Repos/raylibtest/bin/release/raylibtest"
   },
   {
     "arguments": [
@@ -31,12 +31,12 @@
       "-c",
       "-I./include",
       "-o",
-      "./bin/raylibtest",
+      "./bin/release/raylibtest",
       "src/level.c"
     ],
     "directory": "/home/arosh/00_Repos/raylibtest",
     "file": "/home/arosh/00_Repos/raylibtest/src/level.c",
-    "output": "/home/arosh/00_Repos/raylibtest/bin/raylibtest"
+    "output": "/home/arosh/00_Repos/raylibtest/bin/release/raylibtest"
   },
   {
     "arguments": [
@@ -44,12 +44,12 @@
       "-c",
       "-I./include",
       "-o",
-      "./bin/raylibtest",
+      "./bin/release/raylibtest",
       "src/main.c"
     ],
     "directory": "/home/arosh/00_Repos/raylibtest",
     "file": "/home/arosh/00_Repos/raylibtest/src/main.c",
-    "output": "/home/arosh/00_Repos/raylibtest/bin/raylibtest"
+    "output": "/home/arosh/00_Repos/raylibtest/bin/release/raylibtest"
   },
   {
     "arguments": [
@@ -57,12 +57,12 @@
       "-c",
       "-I./include",
       "-o",
-      "./bin/raylibtest",
+      "./bin/release/raylibtest",
       "src/menu.c"
     ],
     "directory": "/home/arosh/00_Repos/raylibtest",
     "file": "/home/arosh/00_Repos/raylibtest/src/menu.c",
-    "output": "/home/arosh/00_Repos/raylibtest/bin/raylibtest"
+    "output": "/home/arosh/00_Repos/raylibtest/bin/release/raylibtest"
   },
   {
     "arguments": [
@@ -70,12 +70,12 @@
       "-c",
       "-I./include",
       "-o",
-      "./bin/raylibtest",
+      "./bin/release/raylibtest",
       "src/player.c"
     ],
     "directory": "/home/arosh/00_Repos/raylibtest",
     "file": "/home/arosh/00_Repos/raylibtest/src/player.c",
-    "output": "/home/arosh/00_Repos/raylibtest/bin/raylibtest"
+    "output": "/home/arosh/00_Repos/raylibtest/bin/release/raylibtest"
   },
   {
     "arguments": [
@@ -83,11 +83,11 @@
       "-c",
       "-I./include",
       "-o",
-      "./bin/raylibtest",
+      "./bin/release/raylibtest",
       "src/textures.c"
     ],
     "directory": "/home/arosh/00_Repos/raylibtest",
     "file": "/home/arosh/00_Repos/raylibtest/src/textures.c",
-    "output": "/home/arosh/00_Repos/raylibtest/bin/raylibtest"
+    "output": "/home/arosh/00_Repos/raylibtest/bin/release/raylibtest"
   }
 ]

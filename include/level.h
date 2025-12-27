@@ -1,5 +1,6 @@
 #ifndef LEVELS_H
 #define LEVELS_H
+#include "external/raylib.h"
 #include "gametypes.h"
 #include "textures.h"
 #include <stdbool.h>
@@ -20,6 +21,7 @@ typedef struct Level {
   TextureDef targetTexture;
   TextureDef houseTexture;
   TextureDef waterTexture;
+  Camera2D **cameras;
 } Level;
 
 void render_level(Level *level);

@@ -1,6 +1,7 @@
 #include "player.h"
 #include "config.h"
 #include "constants.h"
+#include "level.h"
 #include <math.h>
 #include <stdio.h>
 
@@ -16,7 +17,6 @@ void generate_player(Player *player, char *name, PlayerType playerType, float x,
   player->maxSpeed = PLAYER_MAX_SPEED;
   player->radius = PLAYER_RADIUS;
   player->color = color;
-  player->mass = PLAYER_MASS;
   set_player_keys(player);
   set_player_texture(player);
   player->number = (playerType == PLAYER_ONE) ? '1' : '2';
@@ -95,7 +95,7 @@ void handle_axis_deceleration(bool pos_key_pressed, bool neg_key_pressed,
   }
 }
 
-void update_position(Player *players[], int playerCount, Level *level) {
+void update_position(Player *players[], int playerCount, struct Level *level) {
   for (int i = 0; i < playerCount; i++) {
     float new_x = players[i]->position.x;
     float new_y = players[i]->position.y;
@@ -159,6 +159,8 @@ void update_position(Player *players[], int playerCount, Level *level) {
     } else {
       players[i]->velocity.x *= 0.7f;
       players[i]->accelerationVector.x = 0.0f;
+      if (players[i]->velocity.x < 1.0f && players[i]->velocity.x > -1.0f)
+        players[i]->velocity.x = 0.0f;
     }
 
     left_tile = (int)((players[i]->position.x - radius - level->offsetX) /
@@ -192,6 +194,8 @@ void update_position(Player *players[], int playerCount, Level *level) {
     } else {
       players[i]->velocity.y *= 0.7f;
       players[i]->accelerationVector.y = 0.0f;
+      if (players[i]->velocity.y < 1.0f && players[i]->velocity.y > -1.0f)
+        players[i]->velocity.y = 0.0f;
     }
   }
 }
@@ -299,6 +303,21 @@ void draw_player_texture(Level *level, TextureDef tdef, float x, float y,
   Vector2 origin = {0, 0};
   float rotation = 0.0f;
   DrawTexturePro(tdef.texture, source, dest, origin, rotation, player->color);
+}
+
+void draw_player_animation(Level *level, AnimationFrame *anim, float x, float y,
+                           float customScale, Player *player, bool flip) {
+  float scale = level->tileSize / ((float)anim->frameWidth) * customScale;
+  Rectangle source = anim->frameRect;
+  if (flip) {
+    source.width = -(anim->frameWidth); // Negative width flips horizontally
+  }
+  Rectangle dest = {x - (anim->frameWidth * scale) / 2,
+                    y - (anim->frameHeight * scale) / 2,
+                    anim->frameWidth * scale, anim->frameHeight * scale};
+  Vector2 origin = {0, 0};
+  float rotation = 0.0f;
+  DrawTexturePro(anim->texture, source, dest, origin, rotation, player->color);
 }
 
 void render_players(Player *players[], size_t playerCount, Level *level) {

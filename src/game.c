@@ -1,5 +1,6 @@
 #include "game.h"
 #include "external/raylib.h"
+#include "level.h"
 #include "menu.h"
 #include <stdio.h>
 #include <stdlib.h>

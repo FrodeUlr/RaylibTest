@@ -1,4 +1,5 @@
 #include "menu.h"
+#include "level.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -161,7 +162,7 @@ void draw_main_menu(Menu *menu, Game *game) {
   }
 }
 
-void check_inputs(Menu *menu, Game *game, Level *level) {
+void check_inputs(Menu *menu, Game *game, struct Level *level) {
   if (IsKeyPressed(KEY_ESCAPE)) {
     game->gameState = MAIN_MENU;
     level->firstFrame = true;

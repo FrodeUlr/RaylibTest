@@ -212,6 +212,7 @@ void free_game(Game *game) {
   free_camera(game);
   for (size_t i = 0; i < game->playerCount; i++) {
     if (game->players[i] != NULL) {
+      UnloadTexture(game->players[i]->spritesheet.texture);
       free(game->players[i]);
     }
   }
@@ -223,6 +224,8 @@ void free_game(Game *game) {
     UnloadTexture(game->level->groundTexture.texture);
     UnloadTexture(game->level->targetTexture.texture);
     UnloadTexture(game->level->houseTexture.texture);
+    UnloadTexture(game->level->waterTexture.texture);
+    UnloadTexture(game->level->spritesheet.texture);
     free(game->level);
   }
 }

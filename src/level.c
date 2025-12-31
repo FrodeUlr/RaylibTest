@@ -8,10 +8,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-void free_level(Level *level) {
+void free_level_data(Level *level) {
   if (level->data != NULL) {
     for (int i = 0; i < level->rows; i++) {
-      free(level->data[i]);
+      if (level->data[i] != NULL)
+        free(level->data[i]);
     }
     free(level->data);
   }
@@ -25,9 +26,13 @@ void load_level(Level *level, const char *filename) {
     perror("Failed to open level file");
     return;
   }
-  free_level(level);
   level->rows = 0;
   level->data = malloc(sizeof(char *) * MAX_LEVEL_HEIGHT);
+  if (level->data == NULL) {
+    perror("Failed to allocate memory for level data");
+    fclose(file);
+    return;
+  }
   while (fgets(buffer, sizeof(buffer), file)) {
     size_t len = strlen(buffer);
     if (len > 0 && buffer[len - 1] == '\n') {
@@ -52,6 +57,7 @@ void set_offset(Level *level) {
 }
 
 void set_level(Level *level, int number) {
+  printf("in set_level with number: %d\n", number);
   const char **level_data = NULL;
   level->targetTexture =
       SetTextureDef("Target_Tile", 0, 16, 0, 16,
@@ -72,8 +78,10 @@ void set_level(Level *level, int number) {
       ((float)level->spritesheet.texture.width / level->spritesheet.columns),
       ((float)level->spritesheet.texture.height / level->spritesheet.rows)};
   int height = 0;
+  printf("Setting up level %d...\n", number);
   switch (number) {
   case 1: {
+    printf("Setting level to 1\n");
     load_level(level, get_absolute_path("../levels/01"));
     // level->data = data;
     level->wallTexture =

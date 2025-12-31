@@ -26,10 +26,20 @@ void start_game(Game *game, Config *config) {
   } else {
     SetTargetFPS(60);
   }
-  struct Level *level = malloc(sizeof(Level));
-  game->level = level;
+  game->level = NULL;
+  game->level = malloc(sizeof(Level));
+  if (game->level == NULL) {
+    printf("Error allocating memory for level\n");
+    return;
+  }
+  game->players = NULL;
+  game->playerCount = 0;
+  game->firstPlayerSet = false;
+  game->level->number = 0;
+  game->level->cameras = NULL;
   printf("Entering main game loop\n");
-  Menu *menu = malloc(sizeof(Menu));
+  Menu *menu = NULL;
+  menu = malloc(sizeof(Menu));
   if (menu == NULL) {
     printf("Error menu");
     return;
@@ -66,12 +76,14 @@ void start_game(Game *game, Config *config) {
     } else if (game->gameState != MAIN_MENU || game->gameState != EXIT) {
       ClearBackground(BLACK);
       if (game->gameState == LEVEL_ONE) {
-        if (level->number != 1) {
+        if (game->level->number != 1) {
           for (int i = 0; i < game->playerCount; i++) {
             reset_player_movement(game->players[i]);
           }
-          set_level(level, 1);
-          level->firstFrame = true;
+          printf("Setting level to 1\n");
+          set_level(game->level, 1);
+          printf("Level set to %d\n", game->level->number);
+          game->level->firstFrame = true;
         }
         if (check_level_completion(game->players, game->level,
                                    game->playerCount)) {
@@ -81,12 +93,12 @@ void start_game(Game *game, Config *config) {
         }
       }
       if (game->gameState == LEVEL_TWO) {
-        if (level->number != 2) {
+        if (game->level->number != 2) {
           for (int i = 0; i < game->playerCount; i++) {
             reset_player_movement(game->players[i]);
           }
-          set_level(level, 2);
-          level->firstFrame = true;
+          set_level(game->level, 2);
+          game->level->firstFrame = true;
         }
         if (check_level_completion(game->players, game->level,
                                    game->playerCount)) {
@@ -95,18 +107,18 @@ void start_game(Game *game, Config *config) {
       }
       set_camera(game, screen_width, screen_height);
       update_camera(game);
-      update_position(game->players, game->playerCount, level);
-      players_collision(game->players, game->playerCount, level);
-      draw_viewports(&game_viewport, game, level);
+      update_position(game->players, game->playerCount, game->level);
+      players_collision(game->players, game->playerCount, game->level);
+      draw_viewports(&game_viewport, game, game->level);
       draw_ui(game->players, game->playerCount, screen_width, screen_height);
-      if (level->firstFrame) {
-        level->firstFrame = false;
+      if (game->level->firstFrame) {
+        game->level->firstFrame = false;
       }
-      check_inputs(menu, game, level);
+      check_inputs(menu, game, game->level);
     }
     EndDrawing();
   }
-  free_level(game->level);
+  free_level_data(game->level);
   free_menu(menu);
   free_game(game);
   CloseWindow();
@@ -166,11 +178,19 @@ void initialize_players(Game *game, Menu *menu) {
   }
   if (game->players == NULL) {
     game->players = malloc(sizeof(Player *) * game->playerCount);
+    if (game->players == NULL) {
+      printf("Error allocating memory for players\n");
+      return;
+    }
   }
   for (int i = 0; i < game->playerCount; i++) {
     printf("Generating player %d...\n", i + 1);
     int ai = game->firstPlayerSet ? i : i + 1;
     game->players[i] = malloc(sizeof(Player));
+    if (game->players[i] == NULL) {
+      printf("Error allocating memory for player %d\n", i + 1);
+      return;
+    }
     generate_player(game->players[i], menu->players[ai]->name, ai,
                     GetScreenWidth() * 0.9f, GetScreenHeight() * 0.7f,
                     ai == 0 ? RAYWHITE : PINK);
@@ -210,10 +230,18 @@ void free_game(Game *game) {
 void set_camera(Game *game, int screen_width, int screen_height) {
   free_camera(game);
   game->level->cameras = malloc(sizeof(Camera2D *) * game->playerCount);
+  if (game->level->cameras == NULL) {
+    printf("Error allocating memory for cameras\n");
+    return;
+  }
   float screen_scale = GetScreenWidth() / 1920.0f;
   bool single_player_mode = game->playerCount == 1;
   for (size_t i = 0; i < game->playerCount; i++) {
     game->level->cameras[i] = malloc(sizeof(Camera2D));
+    if (game->level->cameras[i] == NULL) {
+      printf("Error allocating memory for camera %zu\n", i);
+      return;
+    }
     game->level->cameras[i]->target =
         (Vector2){game->players[i]->position.x, game->players[i]->position.y};
     float divisor = single_player_mode ? 2.0f : 4.0f;

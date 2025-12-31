@@ -28,6 +28,6 @@ typedef struct Level {
 void render_level(Level *level);
 void set_offset(Level *level);
 void set_level(Level *level, int number);
-void free_level(Level *level);
+void free_level_data(Level *level);
 
 #endif

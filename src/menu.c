@@ -13,6 +13,10 @@ void generate_player_field(Menu *menu) {
     int halfScreenWidth = GetScreenWidth() / 2;
     int halfScreenHeight = GetScreenHeight() / 2;
     menu->players[i] = malloc(sizeof(PlayerDetails));
+    if (menu->players[i] == NULL) {
+      printf("Error allocating memory for player %d details\n", i + 1);
+      return;
+    }
     menu->players[i]->name[0] = '\0';
     menu->players[i]->nameLen = 0;
     menu->players[i]->color = (i == 0) ? LIME : BLACK;
@@ -25,6 +29,10 @@ void generate_player_field(Menu *menu) {
 void generate_button_fields(Menu *menu) {
   for (int i = 0; i < menu->buttonCount; i++) {
     menu->buttons[i] = malloc(sizeof(Button));
+    if (menu->buttons[i] == NULL) {
+      printf("Error allocating memory for button %d\n", i + 1);
+      return;
+    }
     menu->buttons[i]->text = menu_buttons[i].label;
     menu->buttons[i]->rec =
         (Rectangle){((float)GetScreenWidth() / 2) - 100,
@@ -40,7 +48,15 @@ void new_menu(Menu *menu, int playerCount) {
   menu->playerCount = playerCount;
   menu->buttonCount = sizeof(menu_buttons) / sizeof(menu_buttons[0]);
   menu->players = malloc(sizeof(PlayerDetails *) * playerCount);
+  if (menu->players == NULL) {
+    printf("Error allocating memory for menu players\n");
+    return;
+  }
   menu->buttons = malloc(sizeof(Button *) * menu->buttonCount);
+  if (menu->buttons == NULL) {
+    printf("Error allocating memory for menu buttons\n");
+    return;
+  }
   generate_player_field(menu);
   generate_button_fields(menu);
 }

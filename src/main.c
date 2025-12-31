@@ -2,9 +2,18 @@
 #include <stdlib.h>
 
 int main(void) {
-  Config *config = malloc(sizeof(Config));
+  Config *config = NULL;
+  config = malloc(sizeof(Config));
+  if (config == NULL) {
+    return -1;
+  }
   load(config, "config.cfg");
-  Game *game = malloc(sizeof(Game));
+  Game *game = NULL;
+  game = malloc(sizeof(Game));
+  if (game == NULL) {
+    free(config);
+    return -1;
+  }
   game->gameState = MAIN_MENU;
   game->running = true;
   start_game(game, config);

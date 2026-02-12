@@ -9,9 +9,9 @@
       "./bin/release/raylibtest",
       "src/config.c"
     ],
-    "directory": "/home/arosh/00_Repos/raylibtest",
-    "file": "/home/arosh/00_Repos/raylibtest/src/config.c",
-    "output": "/home/arosh/00_Repos/raylibtest/bin/release/raylibtest"
+    "directory": "/home/arosh/00_Repos/pixelquest",
+    "file": "/home/arosh/00_Repos/pixelquest/src/config.c",
+    "output": "/home/arosh/00_Repos/pixelquest/bin/release/raylibtest"
   },
   {
     "arguments": [
@@ -23,9 +23,9 @@
       "./bin/release/raylibtest",
       "src/game.c"
     ],
-    "directory": "/home/arosh/00_Repos/raylibtest",
-    "file": "/home/arosh/00_Repos/raylibtest/src/game.c",
-    "output": "/home/arosh/00_Repos/raylibtest/bin/release/raylibtest"
+    "directory": "/home/arosh/00_Repos/pixelquest",
+    "file": "/home/arosh/00_Repos/pixelquest/src/game.c",
+    "output": "/home/arosh/00_Repos/pixelquest/bin/release/raylibtest"
   },
   {
     "arguments": [
@@ -37,9 +37,9 @@
       "./bin/release/raylibtest",
       "src/level.c"
     ],
-    "directory": "/home/arosh/00_Repos/raylibtest",
-    "file": "/home/arosh/00_Repos/raylibtest/src/level.c",
-    "output": "/home/arosh/00_Repos/raylibtest/bin/release/raylibtest"
+    "directory": "/home/arosh/00_Repos/pixelquest",
+    "file": "/home/arosh/00_Repos/pixelquest/src/level.c",
+    "output": "/home/arosh/00_Repos/pixelquest/bin/release/raylibtest"
   },
   {
     "arguments": [
@@ -51,9 +51,9 @@
       "./bin/release/raylibtest",
       "src/main.c"
     ],
-    "directory": "/home/arosh/00_Repos/raylibtest",
-    "file": "/home/arosh/00_Repos/raylibtest/src/main.c",
-    "output": "/home/arosh/00_Repos/raylibtest/bin/release/raylibtest"
+    "directory": "/home/arosh/00_Repos/pixelquest",
+    "file": "/home/arosh/00_Repos/pixelquest/src/main.c",
+    "output": "/home/arosh/00_Repos/pixelquest/bin/release/raylibtest"
   },
   {
     "arguments": [
@@ -65,9 +65,9 @@
       "./bin/release/raylibtest",
       "src/menu.c"
     ],
-    "directory": "/home/arosh/00_Repos/raylibtest",
-    "file": "/home/arosh/00_Repos/raylibtest/src/menu.c",
-    "output": "/home/arosh/00_Repos/raylibtest/bin/release/raylibtest"
+    "directory": "/home/arosh/00_Repos/pixelquest",
+    "file": "/home/arosh/00_Repos/pixelquest/src/menu.c",
+    "output": "/home/arosh/00_Repos/pixelquest/bin/release/raylibtest"
   },
   {
     "arguments": [
@@ -79,9 +79,9 @@
       "./bin/release/raylibtest",
       "src/player.c"
     ],
-    "directory": "/home/arosh/00_Repos/raylibtest",
-    "file": "/home/arosh/00_Repos/raylibtest/src/player.c",
-    "output": "/home/arosh/00_Repos/raylibtest/bin/release/raylibtest"
+    "directory": "/home/arosh/00_Repos/pixelquest",
+    "file": "/home/arosh/00_Repos/pixelquest/src/player.c",
+    "output": "/home/arosh/00_Repos/pixelquest/bin/release/raylibtest"
   },
   {
     "arguments": [
@@ -93,8 +93,8 @@
       "./bin/release/raylibtest",
       "src/textures.c"
     ],
-    "directory": "/home/arosh/00_Repos/raylibtest",
-    "file": "/home/arosh/00_Repos/raylibtest/src/textures.c",
-    "output": "/home/arosh/00_Repos/raylibtest/bin/release/raylibtest"
+    "directory": "/home/arosh/00_Repos/pixelquest",
+    "file": "/home/arosh/00_Repos/pixelquest/src/textures.c",
+    "output": "/home/arosh/00_Repos/pixelquest/bin/release/raylibtest"
   }
 ]

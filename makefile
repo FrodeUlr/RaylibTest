@@ -1,5 +1,5 @@
+# Variables for build configuration
 PROJECT_NAME = raylibtest
-
 CC              = cc
 SRC             = src/*.c
 INCLUDES        = -I./include
@@ -12,6 +12,8 @@ DEBUG_FOLDER    = ./bin/debug
 OUT_RELEASE     = $(RELEASE_FOLDER)/$(PROJECT_NAME)
 OUT_DEBUG       = $(DEBUG_FOLDER)/$(PROJECT_NAME)
 
+# Setup OS-specific includes and libraries
+# Assumes only windows and linux, if you want to add more OSes, you'll need to modify this section
 ifeq ($(OS),Windows_NT)
   INCLUDES_OS=$(INCLUDES_WIN)
   LIBS=$(LIBS_WIN)
@@ -26,6 +28,7 @@ endif
 
 all: build run
 
+# Pass MODE=debug to make for a debug build, otherwise it defaults to release
 build:
 	@if [ "$(MODE)" = "debug" ]; then \
 		FOLDER=$(DEBUG_FOLDER); \
@@ -46,9 +49,12 @@ build:
 run:
 	@$(OUT_RELEASE)
 
+# Remove output directories and their contents
 clean:
 	@rm -rf bin
 
+# Memory check using valgrind, only for debug builds
+# Used to check for memory leaks and other memory-related issues
 memcheck:
 	make build MODE=debug
 	@valgrind --leak-check=full --track-origins=yes $(OUT_DEBUG)

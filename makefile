@@ -13,6 +13,14 @@ OUT_RELEASE     = $(RELEASE_FOLDER)/$(PROJECT_NAME)
 OUT_WIN         = $(RELEASE_FOLDER)/$(PROJECT_NAME).exe
 OUT_DEBUG       = $(DEBUG_FOLDER)/$(PROJECT_NAME)
 
+ifeq ($(OS),Windows_NT)
+  INCLUDES_OS=$(INCLUDES_WIN)
+  LIBS=$(LIBS_WIN)
+else
+  INCLUDES_OS=$(INCLUDES_LINUX)
+  LIBS=$(LIBS_LINUX)
+endif
+
 .PHONY: all build run clean memcheck windows
 
 all: build run
@@ -32,10 +40,10 @@ build:
 	mkdir -p $$FOLDER; \
 	cp -r art $$FOLDER/; \
 	cp -r levels $$FOLDER/; \
-	$$BEAR $(CC) $$FLAGS -o $$OUT $(INCLUDES) $(INCLUDES_LINUX) $(SRC) $(LIBS_LINUX)
+	$$BEAR $(CC) $$FLAGS -o $$OUT $(INCLUDES) $(INCLUDES_OS) $(SRC) $(LIBS)
 
 windows:
-	mkdir $(RELEASE_FOLDER)
+	mkdir -p $(RELEASE_FOLDER)
 	cp -r art $(RELEASE_FOLDER)/
 	cp -r levels $(RELEASE_FOLDER)/
 	x86_64-w64-mingw32-gcc -o $(OUT_WIN) $(INCLUDES) $(INCLUDES_WIN) $(SRC) $(LIBS_WIN)

@@ -10,7 +10,6 @@ LIBS_WIN        = -L./raylib/win/lib -lraylib -lopengl32 -lgdi32 -lwinmm
 RELEASE_FOLDER  = ./bin/release
 DEBUG_FOLDER    = ./bin/debug
 OUT_RELEASE     = $(RELEASE_FOLDER)/$(PROJECT_NAME)
-OUT_WIN         = $(RELEASE_FOLDER)/$(PROJECT_NAME).exe
 OUT_DEBUG       = $(DEBUG_FOLDER)/$(PROJECT_NAME)
 
 ifeq ($(OS),Windows_NT)
@@ -23,7 +22,7 @@ else
 	BEAR="bear --"
 endif
 
-.PHONY: all build run clean memcheck windows
+.PHONY: all build run clean memcheck
 
 all: build run
 
@@ -43,12 +42,6 @@ build:
 	cp -r art $$FOLDER/; \
 	cp -r levels $$FOLDER/; \
 	$$BEAR $(CC) $$FLAGS -o $$OUT $(INCLUDES) $(INCLUDES_OS) $(SRC) $(LIBS)
-
-windows:
-	mkdir -p $(RELEASE_FOLDER)
-	cp -r art $(RELEASE_FOLDER)/
-	cp -r levels $(RELEASE_FOLDER)/
-	x86_64-w64-mingw32-gcc -o $(OUT_WIN) $(INCLUDES) $(INCLUDES_WIN) $(SRC) $(LIBS_WIN)
 
 run:
 	@$(OUT_RELEASE)

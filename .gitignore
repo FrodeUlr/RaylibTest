@@ -60,3 +60,4 @@ bin
 !/raylib/win/lib/*
 !/raylib/linux/lib/*
 .cache
+.compile_commands.json

@@ -1,9 +1,9 @@
 #include "player.h"
 #include "config.h"
 #include "constants.h"
-#include "external/raylib.h"
 #include "game.h"
 #include "level.h"
+#include "raylib.h"
 #include "textures.h"
 #include <math.h>
 #include <stdio.h>

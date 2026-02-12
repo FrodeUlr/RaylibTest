@@ -1,7 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
-#include "external/raylib.h"
 #include "gametypes.h"
+#include "raylib.h"
 #include "textures.h"
 #include <stddef.h>
 

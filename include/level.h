@@ -1,7 +1,7 @@
 #ifndef LEVELS_H
 #define LEVELS_H
-#include "external/raylib.h"
 #include "gametypes.h"
+#include "raylib.h"
 #include "textures.h"
 #include <stdbool.h>
 

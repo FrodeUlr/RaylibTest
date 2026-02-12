@@ -57,4 +57,6 @@ dkms.conf
 # Additional build files
 bin
 !/lib/*
+!/raylib/win/lib/*
+!/raylib/linux/lib/*
 .cache

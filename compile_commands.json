@@ -4,6 +4,7 @@
       "/usr/bin/cc",
       "-c",
       "-I./include",
+      "-I./raylib/linux/include",
       "-o",
       "./bin/release/raylibtest",
       "src/config.c"
@@ -17,6 +18,7 @@
       "/usr/bin/cc",
       "-c",
       "-I./include",
+      "-I./raylib/linux/include",
       "-o",
       "./bin/release/raylibtest",
       "src/game.c"
@@ -30,6 +32,7 @@
       "/usr/bin/cc",
       "-c",
       "-I./include",
+      "-I./raylib/linux/include",
       "-o",
       "./bin/release/raylibtest",
       "src/level.c"
@@ -43,6 +46,7 @@
       "/usr/bin/cc",
       "-c",
       "-I./include",
+      "-I./raylib/linux/include",
       "-o",
       "./bin/release/raylibtest",
       "src/main.c"
@@ -56,6 +60,7 @@
       "/usr/bin/cc",
       "-c",
       "-I./include",
+      "-I./raylib/linux/include",
       "-o",
       "./bin/release/raylibtest",
       "src/menu.c"
@@ -69,6 +74,7 @@
       "/usr/bin/cc",
       "-c",
       "-I./include",
+      "-I./raylib/linux/include",
       "-o",
       "./bin/release/raylibtest",
       "src/player.c"
@@ -82,6 +88,7 @@
       "/usr/bin/cc",
       "-c",
       "-I./include",
+      "-I./raylib/linux/include",
       "-o",
       "./bin/release/raylibtest",
       "src/textures.c"

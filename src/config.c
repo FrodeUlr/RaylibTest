@@ -1,10 +1,14 @@
 #include "config.h"
 #include <libgen.h>
-#include <linux/limits.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#ifdef _WIN32
+#include <windows.h>
+#else
 #include <unistd.h>
+#endif
 
 static char executable_dir_buffer[PATH_MAX];
 const char *EXECUTABLE_PATH = NULL;
@@ -32,6 +36,10 @@ char *get_absolute_path(const char *relativePath) {
 
 void get(const char *fileName, char *buffer, size_t bufferSize,
          Config *config) {
+#ifdef _WIN32
+  char exe_path[MAX_PATH];
+  GetModuleFileNameA(NULL, exe_path, MAX_PATH);
+#else
   char exe_path[PATH_MAX];
   ssize_t len = readlink("/proc/self/exe", exe_path, sizeof(exe_path) - 1);
   if (len == -1) {
@@ -40,6 +48,7 @@ void get(const char *fileName, char *buffer, size_t bufferSize,
     return;
   }
   exe_path[len] = '\0';
+#endif
 
   char exe_dir[PATH_MAX];
   strncpy(exe_dir, exe_path, sizeof(exe_dir));

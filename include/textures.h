@@ -1,6 +1,6 @@
 #ifndef TEXTURES_H
 #define TEXTURES_H
-#include "external/raylib.h"
+#include "raylib.h"
 
 typedef struct TextureDef {
   const char *name;

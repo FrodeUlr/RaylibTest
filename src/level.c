@@ -1,9 +1,8 @@
 #include "level.h"
 #include "config.h"
 #include "constants.h"
-#include "external/raylib.h"
+#include "raylib.h"
 #include "textures.h"
-#include <linux/limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
